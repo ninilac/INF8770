@@ -1,0 +1,27 @@
+h1
+	gradient.png
+		original:480 000/3 840 264
+		Pair: 335 451 (30,1%)
+		predictif: 480 339 (87,5%)
+	2gradient.png
+		original:480 000/3 840 264
+		Pair:411419 (14,2%)
+		predictif:480 630 (87,4%)
+h2
+	black_stripes.png
+		original:480 000/3 840 264
+		Pair:3 (99,9%)
+		predictif:479 435 (87,5%)
+	stripes.png
+		original:480 000/3 840 264
+		Pair:3 (99,9%)
+		predictif:482 485 (87,5%)
+	squares.png
+		original:480 000/3 840 264
+		Pair:87 (99,8%)
+		predictif:482 997 (87,4%)
+h3
+	black.png
+		original:480 000/3 840 264
+		Pair:1 (99,9%)
+		predictif:482 997 (87,4%)

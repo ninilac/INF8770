@@ -1,6 +1,14 @@
 # Code based on https://github.com/gabilodeau/INF8770/blob/master/Codage%20predictif%20sur%20image.ipynb
-# Huffman based on https://github.com/soxofaan/dahuffman/blob/master/dahuffman/huffmancodec.py
+
+# Some parts of the Huffman code were inspired by
+# https://github.com/soxofaan/dahuffman/blob/master/dahuffman/huffmancodec.py
+
+# numpy library: http://www.numpy.org/
+# matplotlib library: https://matplotlib.org/
+# collections library: https://github.com/python/cpython/blob/2.7/Lib/collections.py
+# sys library: built in
 # bitarray library: https://pypi.org/project/bitarray/
+# uuid library: https://github.com/python/cpython/blob/2.7/Lib/uuid.py
 
 #Node class from https://www.tutorialspoint.com/python/python_binary_tree.htm
 

@@ -24,14 +24,18 @@ class Node:
         print(self.data)
 
     def isLeaf(self):
-        return self.left is None & self.right is None
+        return self.left is None and self.right is None
 
 def assignbit(substitutions, node, bits):
-    if node.isLeaf:
-        substitutions[node.data] = bits
+    if node.isLeaf():
+        substitutions[node.data[0]] = bits
     else:
-        assignbit(substitutions, node.left, bits.append(True))
-        assignbit(substitutions, node.right, bits.append(False))
+        bitsleft = bits.copy()
+        bitsleft.append(True)
+        assignbit(substitutions, node.left, bitsleft)
+        bitsright = bits.copy()
+        bitsright.append(False)
+        assignbit(substitutions, node.right, bitsright)
     return substitutions
 
 def rgb2gray(rgb):
@@ -41,22 +45,24 @@ def imfloat2uint8(image):
     return (image*255).astype('uint8')
 
 fig1 = py.figure(figsize=(10,10))
-imagelue = py.imread('gradient.png')
+imagelue = py.imread('louvre.jpeg')
 image = imagelue.astype('float')
 image = rgb2gray(image)
 image = imfloat2uint8(image)  #conversion en uint pour compression plus facile, on va considerer que l'image est en uint au depart.
 py.imshow(image, cmap=py.get_cmap('gray'))
 #py.show()
 
-originalSize = image.size*sys.getsizeof(image[0][0])
+bytesize = 8 #size of a uint8
+#originalSize = sys.getsizeof(image)*bytesize
+originalSize = sys.getsizeof(image.tobytes()) * bytesize # get the size of the corresponding byte array to remove any extra data
 
 hist, intervalles = np.histogram(image, bins=256)
 py.bar(intervalles[:-1], hist, width=2)
 py.xlim(min(intervalles)-1, max(intervalles))
 #py.show()
 
-erreur = np.zeros((len(image), len(image[0])-1))
-imagepred = np.zeros((len(image), len(image[0])-1))
+erreur = np.zeros((len(image), len(image[0])-1), dtype=np.int8)
+imagepred = np.zeros((len(image), len(image[0])-1), dtype=np.int8)
 
 # image predite equivalente a l'image sans la derniere colonne
 for i in range(0, len(image)):
@@ -78,16 +84,18 @@ py.imshow(erreur, cmap=py.get_cmap('gray'))
 #py.show()
 
 # encodage de l'erreur avec la premiere colonne etant les pixels eux-memes
-encodeErreur = np.column_stack([image[:, 0], erreur])
-py.imshow(encodeErreur, cmap=py.get_cmap('gray'))
+encodedErreur = np.column_stack([image[:, 0], erreur])
+py.imshow(encodedErreur, cmap=py.get_cmap('gray'))
 #py.show()
 
 #Huffman
 c = collections.Counter()
-encodeErreur = encodeErreur.ravel()
+encodedErreur = encodedErreur.ravel()
 
-for value in encodeErreur:
+for value in encodedErreur:
     c[value] += 1
+
+ccopy = c.copy()
 
 #Keeps all the subtree roots for building the Huffman tree
 Roots = dict()
@@ -125,9 +133,30 @@ while(len(c) > 1):
     Roots[nodeId] = root
     c[nodeId] = count
 
-if len(Roots) == 1:
-    print "good"
-else:
-    print "what"
+if len(Roots) != 1:
+    print "Error: more than 1 root node or no root node found..."
+    print "quitting program..."
+    quit()
 
+substitutions = dict()
+bits = bitarray.bitarray()
+
+# Find the substitution codes based on the Huffman tree
+substitutions = assignbit(substitutions, Roots.values()[0], bits)
+
+encodedImg = bitarray.bitarray()
+for pixel in encodedErreur:
+    encodedImg += substitutions[pixel]
+
+finalSize = encodedImg.count()
+
+for i in range(0, len(substitutions)):
+    finalSize += 8 # size of the pixel values, which are between 0 and 255, which fits in a uint8
+    finalSize += substitutions.values()[i].count()
+
+compressionRate = 100.0 * (1-(float(finalSize)/float(originalSize)))
+
+print "original size (bits): ", originalSize
+print "final size (bits): ", finalSize
+print "compression rate (%): ", compressionRate
 

@@ -19,6 +19,13 @@ plt.imshow(immod, cmap=plt.get_cmap('gray'))
 plt.draw()
 
 
+Y = immod[:,:,0]
+Cb = immod[:,:,1]
+Cr = immod[:,:,2]
+
+
+
+
 
 # convert back
 

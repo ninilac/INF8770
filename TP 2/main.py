@@ -8,6 +8,7 @@ import matplotlib.image as mpimg
 import rgb2ycbcr
 import imgsplit
 import DCT
+import zigzag
 
 img = np.asarray(Image.open("Lena_512.png"))
 img_no_alpha = img[:,:,:3]
@@ -35,7 +36,17 @@ YDCT = DCT.dctloop(Ysplit)
 CbDCT = DCT.dctloop(Cbsplit)
 CrDCT = DCT.dctloop(Crsplit)
 
+#zigzag
+Yz = zigzag.zigzag(YDCT)
+Cbz = zigzag.zigzag(CbDCT)
+Crz = zigzag.zigzag(CrDCT)
+
 # convert back
+
+#reverse zigzag
+YDCT = zigzag.zagzig(Yz)
+CbDCT = zigzag.zagzig(Cbz)
+CrDCT = zigzag.zagzig(Crz)
 
 # inverse DCT
 Ysplit = DCT.idctloop(YDCT)

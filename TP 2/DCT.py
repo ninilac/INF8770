@@ -5,7 +5,7 @@ import scipy.fftpack as dctpack
 
 
 def dctloop(img):
-    DCTimg = np.zeros((np.size(img,axis=0),np.size(img,axis=1),np.size(img, axis=2),np.size(img, axis=3)))
+    DCTimg = np.zeros((np.size(img,axis=0),np.size(img,axis=1),np.size(img, axis=2),np.size(img, axis=3)),dtype=np.int64)
     for i in range(0, np.size(img, axis=0)):
         for j in range(0, np.size(img, axis=1)):
             DCTimg[i][j] = dct(img[i][j])
@@ -19,7 +19,7 @@ def dct(blocimg):
 
 
 def idctloop(DCTimg):
-    img = np.zeros((np.size(DCTimg,axis=0),np.size(DCTimg,axis=1),np.size(DCTimg, axis=2),np.size(DCTimg, axis=3)))
+    img = np.zeros((np.size(DCTimg,axis=0),np.size(DCTimg,axis=1),np.size(DCTimg, axis=2),np.size(DCTimg, axis=3)),dtype=np.int64)
     for i in range(0, np.size(DCTimg, axis=0)):
         for j in range(0, np.size(DCTimg, axis=1)):
             img[i][j] = idct(DCTimg[i][j])
